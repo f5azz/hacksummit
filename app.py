@@ -18,5 +18,16 @@ def get_news_by_language():
     
     return Response(dumps(docs, ensure_ascii=False), mimetype='application/json')
 
+@app.route('/newsFront', methods=['GET'])
+def get_news_by_language():
+    lang = request.args.get('lang', 'English')
+    if lang not in db.list_collection_names():
+        return Response(dumps({"error": "Invalid language or collection not found"}, ensure_ascii=False), status=404, mimetype='application/json')
+
+    collection = db[lang]
+    docs = list(collection.find({}, {"post_id": 1,"img_url": 1,"title": 1}))
+    
+    return Response(dumps(docs, ensure_ascii=False), mimetype='application/json')
+
 if __name__ == '__main__':
     app.run(debug=True)
