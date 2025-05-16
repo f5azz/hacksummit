@@ -31,6 +31,7 @@ def get_news_front_by_language():
 
 @app.route('/getSchol', methods=['GET'])
 def get_schol_by_language():
+    db = client["researchBasedScholarshipData"]
     lang = request.args.get('lang', 'English')
     if lang not in db.list_collection_names():
         return Response(dumps({"error": "Invalid language or collection not found"}, ensure_ascii=False), status=404, mimetype='application/json')
