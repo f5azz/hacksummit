@@ -41,5 +41,17 @@ def get_schol_by_language():
     
     return Response(dumps(docs, ensure_ascii=False), mimetype='application/json')
 
+@app.route('/grocery', methods=['GET'])
+def get_groc_by_language():
+    db = client["Groceries"]
+    lang = request.args.get('lang', 'English')
+    if lang not in db.list_collection_names():
+        return Response(dumps({"error": "Invalid language or collection not found"}, ensure_ascii=False), status=404, mimetype='application/json')
+
+    collection = db[lang]
+    docs = list(collection.find({}, {"_id":0}))
+    
+    return Response(dumps(docs, ensure_ascii=False), mimetype='application/json')
+
 if __name__ == '__main__':
     app.run(debug=True)
